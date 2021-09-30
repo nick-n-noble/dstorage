@@ -2,11 +2,13 @@ import { Component } from 'react';
 import logo from '../logo.svg';
 import Web3 from 'web3';
 import './App.css';
+import Navbar from './Navbar.js';
 
 class App extends Component {
   
   async componentDidMount() {
     await this.loadWeb3();
+    await this.loadBlockchainData();
   }
 
   async loadWeb3() {
@@ -25,27 +27,32 @@ class App extends Component {
   }
 
   async loadBlockchainData() {
-    
+    const web3 = window.web3;
+
+    //Load Accounts
+    const accounts = await web3.eth.getAccounts();
+    this.setState({ account: accounts[0]});
+
+    this.setState({loading: false});
+  }
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      loading: true
+    };
   }
   
   render() {
     return ( 
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+      <div>
+        <Navbar account = { this.state.account } />
+        { this.state.loading 
+          ? <div id="loader" className="text-center mt-5"><p>Loading...</p></div>
+          : <div>YEETBOI</div>
+        }
       </div>
+      
     );
   }
   
