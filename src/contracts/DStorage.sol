@@ -1,3 +1,4 @@
+//SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
 
 contract DStorage {
@@ -29,9 +30,6 @@ contract DStorage {
         address payable uploader
     );
 
-    constructor() public {
-
-    }
 
     function uploadFile(string memory _fileHash, uint _fileSize, string memory _fileType, string memory _fileName, string memory _fileDescription) public {
         require(bytes(_fileHash).length > 0);
