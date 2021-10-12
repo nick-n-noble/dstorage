@@ -5,6 +5,9 @@ import Web3 from 'web3';
 import './App.css';
 import Navbar from './Navbar.js';
 
+const ipfsClient = require('ipfs-http-client');
+const ipfs = ipfsClient({ host: 'ipfs.infura.io', port: 5001, protocol: 'https'});
+
 class App extends Component {
   
   async componentDidMount() {
@@ -44,7 +47,7 @@ class App extends Component {
       //Get files amount
       const filesCount = await dstorage.methods.fileCount().call();
       this.setState({ filesCount });
-      //Load fikes & sort by newest
+      //Load files & sort by newest
       for(var i = filesCount; i >= 1; i--) {
         const file = await dstorage.methods.files(i).call();
         this.setState({
