@@ -4,6 +4,7 @@ import logo from '../logo.svg';
 import Web3 from 'web3';
 import './App.css';
 import Navbar from './Navbar.js';
+import Main from './Main';
 
 const ipfsClient = require('ipfs-http-client');
 const ipfs = ipfsClient({ host: 'ipfs.infura.io', port: 5001, protocol: 'https'});
@@ -62,6 +63,20 @@ class App extends Component {
     this.setState({loading: false});
   }
 
+  //Get file from user
+
+  captureFile = event => {
+
+  }
+
+  //Upload file
+
+  uploadFile = description => {
+    
+  }
+
+
+
   constructor(props) {
     super(props);
     this.state = {
@@ -80,7 +95,11 @@ class App extends Component {
         <Navbar account = { this.state.account } />
         { this.state.loading 
           ? <div id="loader" className="text-center mt-5"><p>Loading...</p></div>
-          : <div>YEETBOI</div>
+          : <Main
+              files={this.state.files}
+              captureFile={this.captureFile}
+              uploadFile={this.uploadFile}
+            />
         }
       </div>
       
