@@ -35,6 +35,7 @@ class Main extends Component {
                 
 
               <p>&nbsp;</p>
+
               <table className="table-sm table-bordered text-monospace" style={{ width: '1000px', maxHeight: '450px'}}>
                 <thead style={{ 'fontSize': '15px' }}>
                   <tr className="bg-dark text-white">
@@ -79,6 +80,7 @@ class Main extends Component {
                   )
                 })}
               </table>
+              
             </div>
           </main>
         </div>
