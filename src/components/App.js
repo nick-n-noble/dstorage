@@ -7,7 +7,10 @@ import Navbar from './Navbar.js';
 import Main from './Main';
 
 const ipfsClient = require('ipfs-http-client');
-const ipfs = ipfsClient({ host: 'ipfs.infura.io', port: 5001, protocol: 'https'});
+const { CID } = require('ipfs-http-client');
+const ipfs = ipfsClient.create({ host: 'ipfs.infura.io', port: 5001, protocol: 'https' });
+
+console.log("IPFS INSTANCE: ", ipfs);
 
 class App extends Component {
   
@@ -66,13 +69,50 @@ class App extends Component {
   //Get file from user
 
   captureFile = event => {
+    event.preventDefault();
 
+    const file = event.target.files[0];
+    const reader = new window.FileReader();
+
+    reader.readAsArrayBuffer(file);
+    reader.onloadend = () => {
+      this.setState({
+        buffer: Buffer(reader.result),
+        type: file.type,
+        name: file.name
+      })
+      console.log('buffer', this.state.buffer)
+    }
   }
 
   //Upload file
 
-  uploadFile = description => {
+  async uploadFile(description) {
+    console.log('Submitting file to IPFS...');
+
+    //Add file to IPFS
     
+    const file = await ipfs.add(this.state.buffer);
+    console.log(file);
+    
+    this.setState({ loading: true });
+
+    if(this.state.type === '') {
+      this.setState({ type: 'none' });
+    }
+
+    this.state.dstorage.methods.uploadFile(file.cid.toString(), file.size, this.state.type, this.state.name, description).send({ from: this.state.account }).on('transactionHash', (hash) => {
+      this.setState({
+        loading: false,
+        type: null,
+        name: null
+      })
+      window.location.reload()
+    }).on('error', (e) => {
+      window.alert('Error')
+      console.error(e);
+      this.setState({loading: false})
+    })
   }
 
 
@@ -84,9 +124,12 @@ class App extends Component {
       dstorage: null,
       files: [],
       loading: true,
+      buffer: null,
       type: null,
       name: null
     };
+    this.uploadFile = this.uploadFile.bind(this);
+    this.captureFile = this.captureFile.bind(this);
   }
   
   render() {
